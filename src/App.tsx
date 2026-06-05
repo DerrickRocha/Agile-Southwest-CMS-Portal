@@ -1,11 +1,9 @@
 import './App.css'
-import {ASWCMSPortal} from "./ui/ASWCMSPortal.tsx";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import {Outlet} from "react-router";
 
 function App() {
-
     return (
-        <ASWCMSPortal/>
+        <Outlet/>
     )
 }
 
