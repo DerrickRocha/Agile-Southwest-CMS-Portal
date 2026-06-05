@@ -22,12 +22,10 @@ export async function loginAction({ request }: ActionFunctionArgs) {
 
         const data = await response.json();
 
-        // Store tokens
         localStorage.setItem('accessToken', data.accessToken);
         localStorage.setItem('idToken', data.idToken);
         localStorage.setItem('refreshToken', data.refreshToken);
 
-        // Redirect to home page on success
         return redirect('/');
 
     } catch (error) {
