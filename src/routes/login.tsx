@@ -1,5 +1,6 @@
 import {Alert, Button, Col, Container, Modal, Row, Spinner} from "react-bootstrap";
 import {type ActionFunctionArgs, redirect, Form, useActionData, useNavigation} from "react-router";
+import {networkManager} from "../api/networkManager.ts";
 
 export async function loginAction({ request }: ActionFunctionArgs) {
     const formData = await request.formData();
@@ -7,20 +8,8 @@ export async function loginAction({ request }: ActionFunctionArgs) {
     const password = formData.get('password') as string;
 
     try {
-        const response = await fetch('http://localhost:5100/auth/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, password }),
-        });
 
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
-            return { error: errorData.message || 'Login failed' };
-        }
-
-        const data = await response.json();
+        const data: any = await networkManager.post('/auth/login', { email, password });
 
         localStorage.setItem('accessToken', data.accessToken);
         localStorage.setItem('idToken', data.idToken);

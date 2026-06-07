@@ -1,5 +1,6 @@
 import {Alert, ListGroup} from "react-bootstrap";
-import {Link, redirect, useLoaderData} from "react-router";
+import {Link, useLoaderData} from "react-router";
+import {networkManager} from "../api/networkManager.ts";
 
 interface Tenant {
     tenantId: number;
@@ -11,29 +12,12 @@ interface Tenant {
 
 export const companiesLoader = async () => {
     try{
-        const response = await fetch('http://localhost:5100/tenants/all', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('idToken')}`,
-            },
-        });
-        if (!response.ok) {
-            console.log(response);
-            if (response.status === 401) {
-                localStorage.removeItem('accessToken');
-                localStorage.removeItem('idToken');
-                localStorage.removeItem('refreshToken');
-                return redirect('/login');
-            }
-            const errorData = await response.json().catch(() => ({}));
-            return { error: errorData.message || 'Error fetching companies' };
-        }
-        const data = await response.json();
-        console.log(data);
+
+        const data = await networkManager.get<Tenant[]>('/tenants/all');
         return { tenants: data };
     }
     catch (error) {
+        console.error('Error fetching companies:', error);
         return { error: 'Network error - could not connect to server' };
     }
 }
