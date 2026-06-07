@@ -1,8 +1,15 @@
 import {redirect} from "react-router";
 
+interface RequestOptions {
+    requireTenant?: boolean;
+    timeout?: number;
+    includeAuth?: boolean;
+}
+
 class NetworkManager {
 
     private readonly baseUrl: string;
+    private readonly defaultTimeout = 30000;
 
     constructor(baseUrl: string) {
         this.baseUrl = baseUrl;
@@ -30,8 +37,37 @@ class NetworkManager {
         return headers;
     }
 
-    public async get<T>(url: string, parameters?: Map<string,string>): Promise<T> {
+    private async fetchWithTimeout<T>(
+        url: string,
+        options: RequestInit,
+        timeout: number
+    ): Promise<T> {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeout);
 
+        try {
+            const response = await fetch(url, {
+                ...options,
+                signal: controller.signal,
+            });
+
+            clearTimeout(timeoutId);
+            await this.checkStatus(response);
+            return response.json();
+        } catch (error) {
+            clearTimeout(timeoutId);
+            if (error instanceof Error && error.name === 'AbortError') {
+                throw new Error('Request timeout', { cause: error });
+            }
+            throw error;
+        }
+    }
+
+    public async get<T>(
+        url: string,
+        parameters?: Map<string, string>,
+        options: RequestOptions = {}
+    ): Promise<T> {
         let fullUrl = `${this.baseUrl}${url}`;
 
         if (parameters && parameters.size > 0) {
@@ -42,14 +78,14 @@ class NetworkManager {
             fullUrl += `?${queryParams.toString()}`;
         }
 
-        const response = await fetch(fullUrl, {
-            method: 'GET',
-            headers: this.getHeaders(),
-        });
-
-        await this.checkStatus(response);
-
-        return response.json();
+        return this.fetchWithTimeout<T>(
+            fullUrl,
+            {
+                method: 'GET',
+                headers: this.getHeaders(options.requireTenant, options.includeAuth),
+            },
+            options.timeout || this.defaultTimeout
+        );
     }
 
     public async post<T>(url: string, data: any): Promise<T> {

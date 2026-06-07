@@ -13,7 +13,7 @@ interface Tenant {
 export const companiesLoader = async () => {
     try{
 
-        const data = await networkManager.get<Tenant[]>('/tenants/all');
+        const data = await networkManager.get<Tenant[]>('/tenants/all', undefined, { requireTenant: false });
         return { tenants: data };
     }
     catch (error) {
