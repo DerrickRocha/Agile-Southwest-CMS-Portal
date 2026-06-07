@@ -2,15 +2,12 @@ import {Button, Col, Container, Row} from "react-bootstrap";
 import {Outlet, useNavigate} from "react-router";
 
 export function PortalScreen() {
-    //const { userEmail } = useLoaderData() as { userEmail?: string };
-    const userEmail = localStorage.getItem('userEmail');
     const navigate = useNavigate();
 
     const handleLogout = () => {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('idToken');
         localStorage.removeItem('refreshToken');
-        localStorage.removeItem('userEmail');
         navigate('/login');
     };
 
@@ -25,7 +22,7 @@ export function PortalScreen() {
                         </Button>
                     </div>
                     <hr />
-                    <p>Welcome back, {userEmail || 'User'}!</p>
+                    <p>Welcome back, User</p>
                     <Outlet/>
                 </Col>
             </Row>
