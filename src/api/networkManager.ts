@@ -8,12 +8,26 @@ class NetworkManager {
         this.baseUrl = baseUrl;
     }
 
-    private getHeaders() {
-        return {
+    private getHeaders(includeTenantId: boolean = true, includeAuth: boolean = true): Record<string, string> {
+        const headers: Record<string, string> = {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('idToken')}`,
-            'X-Tenant-Id': `${localStorage.getItem('tenantId')}`
         };
+
+        if (includeAuth) {
+            const idToken = localStorage.getItem('idToken');
+            if (idToken) {
+                headers['Authorization'] = `Bearer ${idToken}`;
+            }
+        }
+
+        if (includeTenantId) {
+            const tenantId = localStorage.getItem('tenantId');
+            if (tenantId) {
+                headers['X-Tenant-Id'] = tenantId;
+            }
+        }
+
+        return headers;
     }
 
     public async get<T>(url: string, parameters?: Map<string,string>): Promise<T> {
