@@ -1,7 +1,8 @@
 import {Container, Nav, Navbar} from "react-bootstrap";
 
-export function tenantConsoleLoader() {
-
+export function tenantConsoleLoader(params) {
+    localStorage.setItem('tenantId', params.tenantId);
+    return { tenantId: params.tenantId }
 }
 
 export function TenantConsole() {
