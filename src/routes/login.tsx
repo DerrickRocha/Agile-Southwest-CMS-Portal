@@ -1,26 +1,25 @@
 import {Alert, Button, Col, Container, Modal, Row, Spinner} from "react-bootstrap";
 import {type ActionFunctionArgs, redirect, Form, useActionData, useNavigation} from "react-router";
+import {networkManager} from "../api/networkManager.ts";
 
-export async function loginAction({ request }: ActionFunctionArgs) {
+interface AuthResponse {
+    accessToken: string;
+    idToken: string;
+    refreshToken: string;
+    expiresIn?: number;
+}
+
+export async function loginAction({request}: ActionFunctionArgs) {
     const formData = await request.formData();
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
 
     try {
-        const response = await fetch('http://localhost:5100/auth/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, password }),
+
+        const data: AuthResponse = await networkManager.post<AuthResponse>('/auth/login', {email, password}, {
+            includeAuth: false,
+            requireTenant: false
         });
-
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
-            return { error: errorData.message || 'Login failed' };
-        }
-
-        const data = await response.json();
 
         localStorage.setItem('accessToken', data.accessToken);
         localStorage.setItem('idToken', data.idToken);
@@ -29,12 +28,11 @@ export async function loginAction({ request }: ActionFunctionArgs) {
         return redirect('/');
 
     } catch (error) {
-        return { error: 'Network error - could not connect to server' };
+        return {error: 'Network error - could not connect to server'};
     }
 }
 
-export function Login(
-) {
+export function Login() {
     const actionData = useActionData() as { error?: string } | undefined;
     const navigation = useNavigation();
     const isLoading = navigation.state === 'submitting';
@@ -104,7 +102,7 @@ function OverlayLoadingScreen() {
             size="sm"
         >
             <Modal.Body className="text-center">
-                <Spinner animation="border" variant="primary" />
+                <Spinner animation="border" variant="primary"/>
                 <p className="mt-2 mb-0">Loading...</p>
             </Modal.Body>
         </Modal>
