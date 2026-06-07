@@ -37,7 +37,12 @@ const router = createBrowserRouter([
             }
         ],
     },
-]);
+], {
+    future: {
+        v8_middleware: true,  // Required for middleware to work
+        // Or use unstable_middleware: true depending on your version
+    }
+});
 
 async function authMiddleware() {
     const token = localStorage.getItem('accessToken');
