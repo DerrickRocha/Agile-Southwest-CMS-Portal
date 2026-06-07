@@ -54,7 +54,6 @@ class NetworkManager {
         const formData = new FormData();
         formData.append('file', file);
 
-        // Add any additional form fields
         if (additionalData) {
             Object.entries(additionalData).forEach(([key, value]) => {
                 formData.append(key, value);
@@ -64,7 +63,6 @@ class NetworkManager {
         const response = await fetch(`${this.baseUrl}${url}`, {
             method: 'POST',
             headers: {
-                // Don't set Content-Type header - browser will set it with correct boundary
                 'Authorization': `Bearer ${localStorage.getItem('idToken')}`,
             },
             body: formData,
