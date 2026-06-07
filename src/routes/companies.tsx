@@ -11,14 +11,17 @@ interface Tenant {
 }
 
 export const companiesLoader = async () => {
-    try{
+    try {
 
-        const data = await networkManager.get<Tenant[]>('/tenants/all', undefined, { requireTenant: false });
-        return { tenants: data };
-    }
-    catch (error) {
+        const data = await networkManager.get<Tenant[]>(
+            '/tenants/all',
+            undefined,
+            {requireTenant: false}
+        );
+        return {tenants: data};
+    } catch (error) {
         console.error('Error fetching companies:', error);
-        return { error: 'Network error - could not connect to server' };
+        return {error: 'Network error - could not connect to server'};
     }
 }
 

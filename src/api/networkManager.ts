@@ -88,16 +88,20 @@ class NetworkManager {
         );
     }
 
-    public async post<T>(url: string, data: any): Promise<T> {
-        const response = await fetch(`${this.baseUrl}${url}`, {
-            method: 'POST',
-            headers: this.getHeaders(),
-            body: JSON.stringify(data),
-        });
-
-        await this.checkStatus(response);
-
-        return response.json();
+    public async post<T, D = Record<string, unknown>>(
+        url: string,
+        data: D,
+        options: RequestOptions = {}
+    ): Promise<T> {
+        return this.fetchWithTimeout<T>(
+            `${this.baseUrl}${url}`,
+            {
+                method: 'POST',
+                headers: this.getHeaders(options.requireTenant, options.includeAuth),
+                body: JSON.stringify(data),
+            },
+            options.timeout || this.defaultTimeout
+        );
     }
 
     public async postFile<T>(url: string, file: File, additionalData?: Record<string, string>): Promise<T> {
