@@ -105,7 +105,7 @@ class NetworkManager {
     }
 
     private clearAuth() {
-        ['accessToken', 'idToken', 'refreshToken'].forEach(key =>
+        ['accessToken', 'idToken', 'refreshToken', 'tenantId'].forEach(key =>
             localStorage.removeItem(key)
         );
     }
