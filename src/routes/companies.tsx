@@ -1,4 +1,4 @@
-import {ListGroup} from "react-bootstrap";
+import {Alert, ListGroup} from "react-bootstrap";
 import {Link, redirect, useLoaderData} from "react-router";
 
 interface Tenant {
@@ -7,10 +7,6 @@ interface Tenant {
     subDomain: string;
     customDomain: string;
     rowVersion: string;
-}
-
-interface CompaniesProps {
-    tenants: Tenant[];
 }
 
 export const companiesLoader = async () => {
@@ -43,7 +39,14 @@ export const companiesLoader = async () => {
 }
 
 export function Companies() {
-    const data = useLoaderData() as CompaniesProps | undefined;
+    const data = useLoaderData() as { tenants: Tenant[] } | { error: string };
+    if ('error' in data) {
+        return <Alert variant="danger">{data.error}</Alert>;
+    }
+
+    if (!data.tenants?.length) {
+        return <p>No companies available.</p>;
+    }
     return (
         <>
             <h2>Please select a company to work with</h2>
