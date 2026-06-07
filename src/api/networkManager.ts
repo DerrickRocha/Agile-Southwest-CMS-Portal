@@ -47,7 +47,7 @@ class NetworkManager {
             headers: this.getHeaders(),
         });
 
-        this.checkStatus(response);
+        await this.checkStatus(response);
 
         return response.json();
     }
@@ -59,7 +59,7 @@ class NetworkManager {
             body: JSON.stringify(data),
         });
 
-        this.checkStatus(response);
+        await this.checkStatus(response);
 
         return response.json();
     }
@@ -82,18 +82,25 @@ class NetworkManager {
             body: formData,
         });
 
-        this.checkStatus(response);
+        await this.checkStatus(response);
         return response.json();
     }
 
-    private checkStatus(response: Response) {
+    private async checkStatus(response: Response): Promise<void> {
         if (response.status === 401) {
             this.clearAuth();
             throw redirect('/login');
         }
 
         if (!response.ok) {
-            throw new Error(`API Error: ${response.statusText}`);
+            let errorMessage = `API Error: ${response.status} ${response.statusText}`;
+            try {
+                const errorBody = await response.json();
+                errorMessage = errorBody.message || errorBody.error || errorMessage;
+            } catch {
+                // Response is not JSON, use status text
+            }
+            throw new Error(errorMessage);
         }
     }
 
