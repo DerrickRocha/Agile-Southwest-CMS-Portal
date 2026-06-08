@@ -1,30 +1,34 @@
 import {Container, Nav, Navbar} from "react-bootstrap";
-import {NavLink, Outlet, useLoaderData} from "react-router";
-
-interface TenantConsoleLoaderParams {
-    params: {
-        tenantId: string;
-    };
-}
+import {type LoaderFunctionArgs, NavLink, Outlet, useLoaderData} from "react-router";
 
 interface TenantConsoleLoaderData {
     tenantId: string;
+    tenantName: string;
+    tenant?: {
+        id: string;
+        name: string;
+        subDomain?: string;
+        customDomain?: string;
+    };
     error?: string;
 }
 
-export async function tenantConsoleLoader({ params }){
+export async function tenantConsoleLoader({ params }: LoaderFunctionArgs){
     const tenantId = params.tenantId;
     console.log('Tenant ID:', tenantId);
     if (!tenantId) {
         return { error: 'Tenant ID is required' };
     }
-    localStorage.setItem('tenantId', params.tenantId);
-    return { tenantId: params.tenantId }
+    localStorage.setItem('tenantId', tenantId);
+    return {
+        tenantId,
+        tenantName: `Tenant ${tenantId}`,
+    };
 }
 
 export function TenantConsole() {
-    const tenant = useLoaderData() as { tenantId: string };
-    const basePath = `/console/${tenant.tenantId}`;
+    const data = useLoaderData() as TenantConsoleLoaderData;
+    const basePath = `/console/${data.tenantId}`;
     return (
         <>
             <Navbar expand="lg" className="bg-body-tertiary">
