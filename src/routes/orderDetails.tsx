@@ -7,7 +7,10 @@ interface OrderDetailsLoaderData {
     error?: string;
 }
 export function ordersDetailsLoader({ params }: LoaderFunctionArgs) {
-
+    const {tenantId, orderId} = params;
+    if (!tenantId) {
+        throw new Response('Tenant ID required', {status: 400});
+    }
 }
 
 export function OrderDetails() {
