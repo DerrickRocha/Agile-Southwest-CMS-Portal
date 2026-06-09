@@ -1,6 +1,6 @@
 import {networkManager} from "../api/networkManager.ts";
 import {Link, type LoaderFunctionArgs, useLoaderData, useRouteError} from "react-router";
-import {ListGroup} from "react-bootstrap";
+import {Table} from "react-bootstrap";
 import type {Order} from "../models/order.ts";
 
 interface OrdersLoaderData {
@@ -33,18 +33,34 @@ export function Orders() {
     return (
         <>
             <h1>Orders ({data.orders.length})</h1>
-            <ListGroup>
+            <Table striped bordered hover>
+                <thead>
+                <tr>
+                    <th>Order Number</th>
+                    <th>Customer</th>
+                    <th>Order Date</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
                 {
                     data.orders.map(order => (
-                        <ListGroup.Item
-                            key={order.id}
-                            as={Link}
-                            to={`${basePath}/${order.id}`}
-                            action
-                        >{order.status}</ListGroup.Item>
+                        <tr key={order.id}>
+                            <td>{order.orderNumber}</td>
+                            <td>{order.customerFirstName} {order.customerLastName}</td>
+                            <td>{new Date(order.orderDate).toLocaleDateString()}</td>
+                            <td>{order.status}</td>
+                            <td>
+                                <Link to={`${basePath}/${order.id}`}>
+                                    View Order
+                                </Link>
+                            </td>
+                        </tr>
                     ))
                 }
-            </ListGroup>
+                </tbody>
+            </Table>
+
         </>
     )
 }

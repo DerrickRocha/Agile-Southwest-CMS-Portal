@@ -104,6 +104,18 @@ class NetworkManager {
         );
     }
 
+    public async patch<T, D = Record<string, unknown>>(url: string, data: D, options: RequestOptions = {}): Promise<T> {
+        return this.fetchWithTimeout<T>(
+            `${this.baseUrl}${url}`,
+            {
+                method: 'PATCH',
+                headers: this.getHeaders(options.requireTenant, options.includeAuth),
+                body: JSON.stringify(data),
+            },
+            options.timeout || this.defaultTimeout
+        );
+    }
+
     public async postFile<T>(url: string, file: File, additionalData?: Record<string, string>): Promise<T> {
         const formData = new FormData();
         formData.append('file', file);

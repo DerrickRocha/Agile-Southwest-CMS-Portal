@@ -9,7 +9,7 @@ import {PortalScreen} from "./routes/portal.tsx";
 import {Companies, companiesLoader} from "./routes/companies.tsx";
 import {TenantConsole, tenantConsoleLoader} from "./routes/tenantConsole.tsx";
 import {Orders, OrdersErrorBoundary, ordersLoader} from "./routes/orders.tsx";
-import {OrderDetails, ordersDetailsLoader} from "./routes/orderDetails.tsx";
+import {OrderDetails, OrderDetailsErrorBoundary, ordersDetailsLoader} from "./routes/orderDetails.tsx";
 
 const router = createBrowserRouter([
     {
@@ -45,6 +45,7 @@ const router = createBrowserRouter([
                                 path: "orders/:orderId",
                                 Component: OrderDetails,
                                 loader: ordersDetailsLoader,
+                                errorElement: <OrderDetailsErrorBoundary/>
 
                             }
                             /*{
