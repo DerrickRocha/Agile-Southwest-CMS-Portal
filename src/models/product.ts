@@ -8,7 +8,6 @@ export interface Product {
     description: string,
     basePrice: number,
     isActive: boolean,
-    stock: number
     options: ProductOption[],
     images: Image[],
 }
