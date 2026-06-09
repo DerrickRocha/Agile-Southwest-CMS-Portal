@@ -45,6 +45,14 @@ export function TenantConsole() {
                                 Orders
                             </NavLink>
                             <NavLink
+                                to={`${basePath}/products`}
+                                className={({ isActive }) =>
+                                    isActive ? 'nav-link active' : 'nav-link'
+                                }
+                            >
+                                Products
+                            </NavLink>
+                            <NavLink
                                 to={`${basePath}/inventory`}
                                 className={({ isActive }) =>
                                     isActive ? 'nav-link active' : 'nav-link'

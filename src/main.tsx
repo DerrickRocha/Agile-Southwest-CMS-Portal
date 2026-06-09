@@ -10,6 +10,7 @@ import {Companies, companiesLoader} from "./routes/companies.tsx";
 import {TenantConsole, tenantConsoleLoader} from "./routes/tenantConsole.tsx";
 import {Orders, OrdersErrorBoundary, ordersLoader} from "./routes/orders.tsx";
 import {OrderDetails, OrderDetailsErrorBoundary, ordersDetailsLoader} from "./routes/orderDetails.tsx";
+import {ProductsScreen, ProductsScreenErrorBoundary, productsScreenLoader} from "./routes/productsScreen.tsx";
 
 const router = createBrowserRouter([
     {
@@ -47,6 +48,12 @@ const router = createBrowserRouter([
                                 loader: ordersDetailsLoader,
                                 errorElement: <OrderDetailsErrorBoundary/>
 
+                            },
+                            {
+                                path: "products",
+                                Component: ProductsScreen,
+                                loader: productsScreenLoader,
+                                errorElement: <ProductsScreenErrorBoundary/>
                             }
                             /*{
                                 path: "inventory",  // Relative: /console/:tenantId/inventory
