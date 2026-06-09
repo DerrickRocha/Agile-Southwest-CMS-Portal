@@ -8,8 +8,8 @@ import {Login, loginAction} from "./routes/login.tsx";
 import {PortalScreen} from "./routes/portal.tsx";
 import {Companies, companiesLoader} from "./routes/companies.tsx";
 import {TenantConsole, tenantConsoleLoader} from "./routes/tenantConsole.tsx";
-import {Orders, ordersLoader} from "./routes/orders.tsx";
-import {OrderDetails} from "./routes/orderDetails.tsx";
+import {Orders, OrdersErrorBoundary, ordersLoader} from "./routes/orders.tsx";
+import {OrderDetails, ordersDetailsLoader} from "./routes/orderDetails.tsx";
 
 const router = createBrowserRouter([
     {
@@ -39,11 +39,13 @@ const router = createBrowserRouter([
                                 path: "orders",  // Relative: /console/:tenantId/orders
                                 Component: Orders,
                                 loader: ordersLoader,
+                                errorElement: <OrdersErrorBoundary/>,
                             },
                             {
                                 path: "orders/:orderId",
                                 Component: OrderDetails,
-                                loader: ordersLoader
+                                loader: ordersDetailsLoader,
+
                             }
                             /*{
                                 path: "inventory",  // Relative: /console/:tenantId/inventory

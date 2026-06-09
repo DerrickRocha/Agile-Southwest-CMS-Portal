@@ -6,7 +6,7 @@ interface OrderDetailsLoaderData {
     order: Order;
     error?: string;
 }
-export function ordersLoader({ params }: LoaderFunctionArgs) {
+export function ordersDetailsLoader({ params }: LoaderFunctionArgs) {
 
 }
 
