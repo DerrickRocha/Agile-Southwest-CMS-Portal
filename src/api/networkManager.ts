@@ -104,11 +104,11 @@ class NetworkManager {
         );
     }
 
-    public async put<T, D = Record<string, unknown>>(url: string, data: D, options: RequestOptions = {}): Promise<T> {
+    public async patch<T, D = Record<string, unknown>>(url: string, data: D, options: RequestOptions = {}): Promise<T> {
         return this.fetchWithTimeout<T>(
             `${this.baseUrl}${url}`,
             {
-                method: 'PUT',
+                method: 'PATCH',
                 headers: this.getHeaders(options.requireTenant, options.includeAuth),
                 body: JSON.stringify(data),
             },

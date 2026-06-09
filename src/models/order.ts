@@ -7,6 +7,6 @@ export interface Order {
     customerId: number;
     customerFirstName: string;
     customerLastName: string;
-    totalAmount: number;
-    orderDate: string;
+    totalCents: number;
+    createdAt: string;
 }
